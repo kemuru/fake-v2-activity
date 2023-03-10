@@ -1,4 +1,4 @@
-import { pnk } from "../utils/contractsObject/pnk"
+import { pnk } from "../utils/contractsObject"
 import { Wallet } from "ethers"
 
 export const approve = async (wallet: Wallet) => {

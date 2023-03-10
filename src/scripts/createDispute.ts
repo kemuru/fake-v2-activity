@@ -1,6 +1,6 @@
 import { Wallet } from "ethers"
-import { disputeResolver } from "src/utils/contractsObject/disputeResolver"
-import { klerosCore } from "../utils/contractsObject/klerosCore"
+import { disputeResolver } from "src/utils/contractsObject"
+import { klerosCore } from "../utils/contractsObject"
 let options = { gasLimit: 10000000, gasPrice: 5000000000 }
 
 export const createDispute = async (wallet: Wallet) => {

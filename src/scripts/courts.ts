@@ -1,4 +1,4 @@
-import { klerosCore } from "../utils/contractsObject/klerosCore"
+import { klerosCore } from "../utils/contractsObject"
 
 export const courts = async (courtId: number) => {
   // parameter is courtId, this function returns information about a court

@@ -1,5 +1,5 @@
 import { Wallet } from "ethers"
-import { klerosCore } from "../utils/contractsObject/klerosCore"
+import { klerosCore } from "../utils/contractsObject"
 
 export const setStake = async (wallet: Wallet) => {
   //first parameter is courtId, second is desired PNK to stake (in wei)
