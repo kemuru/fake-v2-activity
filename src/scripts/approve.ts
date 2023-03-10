@@ -1,4 +1,4 @@
-import { pnkContract } from "../utils/pnkContract"
+import { pnk } from "../utils/contractsObject/pnk"
 import { Wallet } from "ethers"
 
 export const approve = async (wallet: Wallet) => {
@@ -8,7 +8,7 @@ export const approve = async (wallet: Wallet) => {
     process.env.KLEROS_CORE_CONTRACT_ADDRESS,
     "200000000000000000000",
   ]
-  const resultApproveTx = await pnkContract
+  const resultApproveTx = await pnk
     .connect(wallet)
     ["approve"](...approvePNKFunctionArgs)
   return resultApproveTx

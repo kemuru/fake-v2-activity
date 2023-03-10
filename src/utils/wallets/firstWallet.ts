@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { provider } from "./provider"
+import { provider } from "../provider"
 import dotenv from "dotenv"
 dotenv.config()
 
