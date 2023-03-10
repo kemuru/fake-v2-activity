@@ -40,31 +40,33 @@ const main = async () => {
     process.env.KLEROS_CORE_CONTRACT_ADDRESS,
     "200000000000000000000",
   ]
-  // const firstWalletResultApprovePNK = await pnkContract
-  //   .connect(firstWallet)
-  //   ["approve"](...approvePNKFunctionArgs)
+  const firstWalletResultApprovePNK = await pnkContract
+    .connect(firstWallet)
+    ["approve"](...approvePNKFunctionArgs)
 
   const secondWalletResultApprovePNK = await pnkContract
     .connect(secondWallet)
     ["approve"](...approvePNKFunctionArgs)
-  // await firstWalletResultApprovePNK.wait()
+
+  await firstWalletResultApprovePNK.wait()
   await secondWalletResultApprovePNK.wait()
 
   //setStake of 200 PNK each on firstWallet and secondWallet
 
   const setStakeFunctionArgs = [1, "200000000000000000000"]
 
-  // const firstWalletSetStakeTransaction = await klerosCoreContract
-  //   .connect(firstWallet)
-  //   ["setStake"](...setStakeFunctionArgs, { gasLimit: 500000 })
+  const firstWalletSetStakeTransaction = await klerosCoreContract
+    .connect(firstWallet)
+    ["setStake"](...setStakeFunctionArgs, { gasLimit: 500000 })
 
   const secondWalletSetStakeTransaction = await klerosCoreContract
     .connect(secondWallet)
     ["setStake"](...setStakeFunctionArgs, { gasLimit: 500000 })
 
-  // const firstWalletTxReceipt = await firstWalletSetStakeTransaction.wait()
+  const firstWalletTxReceipt = await firstWalletSetStakeTransaction.wait()
   const secondWalletTxReceipt = await secondWalletSetStakeTransaction.wait()
-  // console.log(firstWalletTxReceipt)
+  
+  console.log(firstWalletTxReceipt)
   console.log(secondWalletTxReceipt)
 }
 
