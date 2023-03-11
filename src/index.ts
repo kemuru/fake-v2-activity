@@ -1,16 +1,36 @@
 import { ethers } from "ethers"
-import { firstWallet } from "./utils/wallets"
-import { secondWallet } from "./utils/wallets"
-import { thirdWallet } from "./utils/wallets"
-import { courts } from "./scripts/courts"
-import { approve } from "./scripts/approve"
-import { setStake } from "./scripts/setStake"
+import {
+  governorWallet,
+  firstWallet,
+  secondWallet,
+  thirdWallet,
+} from "./utils/wallets"
+import {
+  courts,
+  approve,
+  setStake,
+  createDisputeOnResolver,
+  passPeriod,
+  castVote,
+  passPhaseDisputeKitClassic,
+  passPhaseKlerosCore,
+  draw,
+  setRandomizer,
+} from "./scripts"
 
 const main = async () => {
-  // console.log(await courts(1))
-  console.log(await approve(thirdWallet))
-  console.log(await setStake(thirdWallet))
+  // await courts(1)
+  // await setStake(firstWallet)
+  // await createDisputeOnResolver()
+  // await passPeriod(firstWallet)
+  // await passPhaseDisputeKitClassic(firstWallet)
+  await setRandomizer(governorWallet)
+  // await draw(firstWallet)
+  // await passPhaseKlerosCore(firstWallet)
+  // await castVote(firstWallet))
+  // await castVote(secondWallet)
+  // await castVote(thirdWallet)
 }
 
-// executes script
+// executes scripts
 main()

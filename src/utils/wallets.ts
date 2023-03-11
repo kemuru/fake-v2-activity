@@ -3,6 +3,11 @@ import { arbGoerliProvider } from "./providers"
 import dotenv from "dotenv"
 dotenv.config()
 
+export const governorWallet = new ethers.Wallet(
+  process.env.PRIVATE_KEY_GOVERNOR as string,
+  arbGoerliProvider
+)
+
 export const firstWallet = new ethers.Wallet(
   process.env.PRIVATE_KEY_WALLET_1 as string,
   arbGoerliProvider
