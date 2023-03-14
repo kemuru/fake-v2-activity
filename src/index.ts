@@ -1,5 +1,11 @@
 import { ethers } from "ethers"
-import { firstWallet, secondWallet, thirdWallet } from "./utils/wallets"
+import {
+  firstWallet,
+  secondWallet,
+  thirdWallet,
+  fourthWallet,
+  fifthWallet,
+} from "./utils/wallets"
 import {
   approve,
   setStake,
@@ -9,36 +15,49 @@ import {
   passPhaseDisputeKitClassic,
   passPhaseKlerosCore,
   toVoting,
+  draw,
 } from "./scripts"
 
-const main = async () => {
-  // approve KlerosCore to use your PNK tokens on 3 different wallets
+const executeDisputeWorkflow = async () => {
+  // approve KlerosCore to use your PNK tokens on 5 different wallets
   await approve(firstWallet)
   await approve(secondWallet)
   await approve(thirdWallet)
+  await approve(fourthWallet)
+  await approve(fifthWallet)
 
-  // stake PNK with 3 different wallets
+  // stake PNK with 5 different wallets
   await setStake(firstWallet)
   await setStake(secondWallet)
   await setStake(thirdWallet)
+  await setStake(fourthWallet)
+  await setStake(fifthWallet)
 
-  // create a new dispute
-  const disputeID = await createDisputeOnResolver(firstWallet)
+  // create a new dispute (you need some ETH on the wallet)
+  const disputeID = Number(await createDisputeOnResolver(firstWallet))
+  console.log(disputeID)
 
-  // start Voting phase on the previously created dispute
+  // leaves the dispute ready for voting. note: this passes a bunch of phases, draws jurors, passes periods..
   await toVoting(firstWallet, disputeID)
 
-  // vote with 3 different jurors
-  await castVote(firstWallet, disputeID)
-  await castVote(secondWallet, disputeID)
-  await castVote(thirdWallet, disputeID)
+  // we can skip voting if the court has no time periods [0,0,0,0], otherwise use this formula on the drawn jurors/wallets:
+  // await castVote(firstWallet, disputeID)
 
   // pass period to appeal period
   await passPeriod(firstWallet, disputeID)
 
   // pass period and end dispute
   await passPeriod(firstWallet, disputeID)
+
+  // return DK and Core phases to "resolving" and "staking", respectively
+  await passPhaseDisputeKitClassic(firstWallet)
+  await passPhaseKlerosCore(firstWallet)
 }
 
-// executes scripts
-main()
+const createdisputtest = async () => {
+  const disputeID = await createDisputeOnResolver(firstWallet)
+  console.log(disputeID)
+}
+
+// executes script
+createdisputtest()

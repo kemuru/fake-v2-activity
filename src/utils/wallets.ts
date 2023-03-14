@@ -22,3 +22,13 @@ export const thirdWallet = new ethers.Wallet(
   process.env.PRIVATE_KEY_WALLET_3 as string,
   arbGoerliProvider
 )
+
+export const fourthWallet = new ethers.Wallet(
+  process.env.PRIVATE_KEY_WALLET_4 as string,
+  arbGoerliProvider
+)
+
+export const fifthWallet = new ethers.Wallet(
+  process.env.PRIVATE_KEY_WALLET_5 as string,
+  arbGoerliProvider
+)

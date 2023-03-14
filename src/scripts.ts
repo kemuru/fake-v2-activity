@@ -9,7 +9,7 @@ import { Wallet } from "ethers"
 import { firstWallet } from "./utils/wallets"
 import dotenv from "dotenv"
 dotenv.config()
-let options = { gasLimit: 10000000, gasPrice: 97000000000 }
+let options = { gasLimit: 10000000, gasPrice: 50000000000 }
 
 // this function returns information about a court
 export const courts = async (courtId: number) => {
@@ -25,29 +25,38 @@ export const approve = async (wallet: Wallet) => {
 second parameter is amount of PNK you want to approve (in wei)*/
   const approvePNKFunctionArgs = [
     process.env.KLEROS_CORE_CONTRACT_ADDRESS,
-    "200000000000000000000",
+    "400000000000000000000",
   ]
   const resultApproveTx = await pnk
     .connect(wallet)
     ["approve"](...approvePNKFunctionArgs)
-  console.log(resultApproveTx)
+  await resultApproveTx.wait()
+  console.log(
+    `approve wallet ${wallet.address}, txID: %s`,
+    resultApproveTx?.hash
+  )
 }
 
 export const setStake = async (wallet: Wallet) => {
   //first parameter is courtId, second is desired PNK to stake (in wei)
-  const setStakeFunctionArgs = [1, "200000000000000000000"]
+  const setStakeFunctionArgs = [1, "400000000000000000000"]
 
   const resultSetStakeTx = await klerosCore
     .connect(wallet)
     ["setStake"](...setStakeFunctionArgs)
-  console.log(resultSetStakeTx)
+  await resultSetStakeTx.wait()
+  console.log(
+    `setStake wallet ${wallet.address}, txID: %s`,
+    resultSetStakeTx?.hash
+  )
 }
 
 export const createDisputeOnResolver = async (wallet: Wallet) => {
   const choices = 2
   const nbOfJurors = 3n
   const feeForJuror = 100000000000000000n
-  var tx
+  let tx
+  let disputeID
   try {
     tx = await disputeResolver
       .connect(wallet)
@@ -62,24 +71,22 @@ export const createDisputeOnResolver = async (wallet: Wallet) => {
       )
     await tx.wait()
     console.log("txID: %s", tx?.hash)
+    const filter = klerosCore.filters.DisputeCreation()
+    const logs = await klerosCore.queryFilter(
+      filter,
+      tx.blockNumber,
+      tx.blockNumber
+    )
+    disputeID = logs[logs.length-1]?.args?._disputeID
+    console.log("DisputeID: %s", disputeID)
   } catch (e) {
     if (typeof e === "string") {
       console.log("Error: %s", e)
     } else if (e instanceof Error) {
       console.log("%O", e)
     }
-  } finally {
-    if (tx) {
-      const filter = klerosCore.filters.DisputeCreation()
-      const logs = await klerosCore.queryFilter(
-        filter,
-        tx.blockNumber,
-        tx.blockNumber
-      )
-      console.log("DisputeID: %s", logs[0]?.args?._disputeID)
-      return logs[0]?.args?._disputeID
-    }
   }
+  return disputeID
 }
 
 export const passPhaseKlerosCore = async (wallet: Wallet) => {
@@ -96,7 +103,7 @@ export const passPhaseKlerosCore = async (wallet: Wallet) => {
     }
   } finally {
     const after = await klerosCore.phase()
-    console.log("Phase: %d -> %d", before, after)
+    console.log("KlerosCore Phase: %d -> %d", before, after)
   }
 }
 
@@ -116,7 +123,7 @@ export const passPhaseDisputeKitClassic = async (wallet: Wallet) => {
     }
   } finally {
     const after = await disputeKitClassic.phase()
-    console.log("Phase: %d -> %d", before, after)
+    console.log("DisputeKitClassic Phase: %d -> %d", before, after)
   }
 }
 
@@ -137,7 +144,7 @@ export const isRngReady = async (wallet: Wallet) => {
     process.env.DISPUTE_KIT_CLASSIC_CONTRACT_ADDRESS
   )
   const n = await randomizerRng.randomNumbers(requesterID)
-  if (n === 0) {
+  if (Number(n) === 0) {
     console.log("rng is NOT ready.")
     return false
   } else {
@@ -164,8 +171,6 @@ export const toVoting = async (wallet: Wallet, disputeID: number) => {
   console.log("RNG is ready, pass another DK phase & draw jurors.", disputeID)
   await passPhaseDisputeKitClassic(wallet)
   await draw(wallet, disputeID)
-  await passPhaseDisputeKitClassic(wallet)
-  await passPhaseKlerosCore(wallet)
   await passPeriod(wallet, disputeID)
 }
 
