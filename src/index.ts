@@ -14,7 +14,6 @@ import {
   castVote,
   passPhaseDisputeKitClassic,
   passPhaseKlerosCore,
-  toVoting,
   draw,
   toEvidencePeriod,
 } from "./scripts"
@@ -36,7 +35,6 @@ const executeDisputeWorkflow = async () => {
 
   // create a new dispute (you need some ETH on the wallet)
   const disputeID = Number(await createDisputeOnResolver(firstWallet))
-  console.log(disputeID)
 
   // leaves the dispute on EvidencePeriod with jurors drawn. note: this passes a bunch of phases & draws jurors...
   await toEvidencePeriod(firstWallet, disputeID)
