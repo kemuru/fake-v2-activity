@@ -54,10 +54,5 @@ const executeDisputeWorkflow = async () => {
   await passPhaseKlerosCore(firstWallet)
 }
 
-const createdisputtest = async () => {
-  const disputeID = await createDisputeOnResolver(firstWallet)
-  console.log(disputeID)
-}
-
 // executes script
-createdisputtest()
+executeDisputeWorkflow()
