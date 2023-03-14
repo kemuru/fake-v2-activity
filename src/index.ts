@@ -16,6 +16,7 @@ import {
   passPhaseKlerosCore,
   toVoting,
   draw,
+  toEvidencePeriod,
 } from "./scripts"
 
 const executeDisputeWorkflow = async () => {
@@ -37,8 +38,11 @@ const executeDisputeWorkflow = async () => {
   const disputeID = Number(await createDisputeOnResolver(firstWallet))
   console.log(disputeID)
 
-  // leaves the dispute ready for voting. note: this passes a bunch of phases, draws jurors, passes periods..
-  await toVoting(firstWallet, disputeID)
+  // leaves the dispute on EvidencePeriod with jurors drawn. note: this passes a bunch of phases & draws jurors...
+  await toEvidencePeriod(firstWallet, disputeID)
+
+  // pass period to voting period
+  await passPeriod(firstWallet, disputeID)
 
   // we can skip voting if the court has no time periods [0,0,0,0], otherwise use this formula on the drawn jurors/wallets:
   // await castVote(firstWallet, disputeID)

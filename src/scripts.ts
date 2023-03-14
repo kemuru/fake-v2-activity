@@ -153,7 +153,7 @@ export const isRngReady = async (wallet: Wallet) => {
   }
 }
 
-export const toVoting = async (wallet: Wallet, disputeID: number) => {
+export const toEvidencePeriod = async (wallet: Wallet, disputeID: number) => {
   console.log("Running for disputeID %d", disputeID)
   var ready
   try {
@@ -171,7 +171,6 @@ export const toVoting = async (wallet: Wallet, disputeID: number) => {
   console.log("RNG is ready, pass another DK phase & draw jurors.", disputeID)
   await passPhaseDisputeKitClassic(wallet)
   await draw(wallet, disputeID)
-  await passPeriod(wallet, disputeID)
 }
 
 export const draw = async (wallet: Wallet, disputeID: number) => {
